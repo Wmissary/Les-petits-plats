@@ -1,71 +1,91 @@
 import { fetchData } from "../utils/fetchData.js";
 
 import { FiltersManager } from "../managers/FiltersManager.js";
-import { FilterModel } from "../models/FilterModel.js";
-import { FilterView } from "../views/FilterView.js";
-import { FilterController } from "../controllers/FilterController.js";
 import { TagsManager } from "../managers/TagsManager.js";
-import { TagView } from "../views/TagView.js";
-import { TagController } from "../controllers/TagController.js";
+import { RecipesManager } from "../managers/RecipesManager.js";
 
-function renderFilters(data) {
-  const filtersContainer = document.querySelector(".filters");
+import {
+  createRecipeController,
+  createFilterController,
+} from "../utils/createController.js";
+
+import { addTagEvent, addFilterEvent } from "../events/event.js";
+
+async function init() {
+  const data = await fetchData();
+
+  const recipesContainer = document.querySelector(".recipes");
+  const ingredientsContainer = document.querySelector(".ingredients");
+  const appliancesContainer = document.querySelector(".appliances");
+  const ustensilsContainer = document.querySelector(".utensils");
   const activeFiltersContainer = document.querySelector(".active-filters");
 
-  const filtersManager = new FiltersManager();
+  const recipesManager = new RecipesManager();
+  const ingredientsManager = new FiltersManager();
+  const appliancesManager = new FiltersManager();
+  const ustensilsManager = new FiltersManager();
   const tagsManager = new TagsManager();
 
   for (const item of data) {
-    const model = new FilterModel(item);
-    const view = new FilterView({
-      model,
-      className: "filter",
-      container: filtersContainer,
-    });
-    const controller = new FilterController({
-      model,
-      view,
-    });
-    filtersManager.addFilter(controller);
+    const recipeController = createRecipeController(
+      item,
+      recipesContainer,
+      "recipe"
+    );
+    recipesManager.addRecipe(recipeController);
+
+    for (const ingredient of item.ingredients) {
+      const filterController = createFilterController(
+        {
+          name: ingredient.ingredient,
+          type: "ingredient",
+        },
+        ingredientsContainer,
+        "filter"
+      );
+      ingredientsManager.addFilter(filterController);
+    }
+    const filterController = createFilterController(
+      {
+        name: item.appliance,
+        type: "appliance",
+      },
+      appliancesContainer,
+      "filter"
+    );
+    appliancesManager.addFilter(filterController);
+
+    for (const utensil of item.ustensils) {
+      const filterController = createFilterController(
+        {
+          name: utensil,
+          type: "utensil",
+        },
+        ustensilsContainer,
+        "filter"
+      );
+      ustensilsManager.addFilter(filterController);
+    }
   }
-  filtersManager.sortFilters();
-  filtersManager.render(filtersContainer);
+  recipesManager.sortRecipes();
+  recipesManager.render(recipesContainer);
 
-  document.addEventListener("addTag", (e) => {
-    const model = new FilterModel(e.detail);
-    const view = new TagView({
-      model,
-      className: "active-filter",
-      container: activeFiltersContainer,
-    });
-    const controller = new TagController({
-      model,
-      view,
-    });
-    tagsManager.addTag(controller);
-    tagsManager.sortTags();
-    tagsManager.render(activeFiltersContainer);
-    filtersManager.removeFilter(e.detail.name);
-  });
+  ingredientsManager.sortFilters();
+  ingredientsManager.render(ingredientsContainer);
 
-  document.addEventListener("addFilter", (e) => {
-    const model = new FilterModel(e.detail);
-    const view = new FilterView({
-      model,
-      className: "filter",
-      container: filtersContainer,
-    });
-    const controller = new FilterController({
-      model,
-      view,
-    });
-    filtersManager.addFilter(controller);
-    filtersManager.sortFilters();
-    filtersManager.render(filtersContainer);
-    tagsManager.removeTag(e.detail.name);
-  });
+  appliancesManager.sortFilters();
+  appliancesManager.render(appliancesContainer);
+
+  ustensilsManager.sortFilters();
+  ustensilsManager.render(ustensilsContainer);
+
+  addTagEvent(tagsManager, ingredientsManager, activeFiltersContainer);
+  addTagEvent(tagsManager, appliancesManager, activeFiltersContainer);
+  addTagEvent(tagsManager, ustensilsManager, activeFiltersContainer);
+
+  addFilterEvent(tagsManager, ingredientsManager, ingredientsContainer);
+  addFilterEvent(tagsManager, appliancesManager, appliancesContainer);
+  addFilterEvent(tagsManager, ustensilsManager, ustensilsContainer);
 }
 
-fetchData().then((data) => {
-  renderFilters(data);
-});
+init();

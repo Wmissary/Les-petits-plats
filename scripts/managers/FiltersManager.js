@@ -3,7 +3,15 @@ export class FiltersManager {
     this.filters = new Set([]);
   }
   addFilter(filter) {
-    this.filters.add(filter);
+    if (
+      ![...this.filters].some(
+        (f) =>
+          f.model.name === filter.model.name ||
+          f.model.name === filter.model.name.slice(0, -1)
+      )
+    ) {
+      this.filters.add(filter);
+    }
   }
   removeFilter(filterName) {
     this.filters = new Set(

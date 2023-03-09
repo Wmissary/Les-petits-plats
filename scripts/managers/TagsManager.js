@@ -3,7 +3,9 @@ export class TagsManager {
     this.tags = new Set([]);
   }
   addTag(tag) {
-    this.tags.add(tag);
+    if (![...this.tags].some((t) => t.model.name === tag.model.name)) {
+      this.tags.add(tag);
+    }
   }
   removeTag(tagName) {
     this.tags = new Set(
