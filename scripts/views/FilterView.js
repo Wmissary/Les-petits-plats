@@ -1,15 +1,13 @@
-export class FilterView {
-  constructor(data) {
-    this.model = data.model;
-    this.className = data.className;
-    this.container = data.container;
+export default class FilterView {
+  constructor(model) {
+    this.model = model;
   }
-  create() {
+  create(className) {
     const item = document.createElement("li");
-    item.classList.add(this.className);
+    item.classList.add(className);
 
     const name = document.createElement("p");
-    name.classList.add(`${this.className}__name`);
+    name.classList.add(`${className}__name`);
     name.textContent = this.model.name;
 
     item.appendChild(name);
@@ -26,8 +24,8 @@ export class FilterView {
     });
     return item;
   }
-  render() {
-    const item = this.create();
-    this.container.appendChild(item);
+  render(container, className) {
+    const item = this.create(className);
+    container.appendChild(item);
   }
 }

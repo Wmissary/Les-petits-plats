@@ -1,26 +1,17 @@
-export class RecipesManager {
-  constructor() {
-    this.recipes = new Set([]);
+export default class RecipesManager {
+  constructor(recipes, filtersManagers) {
+    this.recipes = recipes;
+    this.activeRecipes = this.recipes;
   }
-  addRecipe(recipe) {
-    this.recipes.add(recipe);
+  sort() {
+    this.activeRecipes = this.activeRecipes.sort((a, b) => {
+      return a.model.name.localeCompare(b.model.name);
+    });
   }
-  removeRecipe(recipeName) {
-    this.recipes = new Set(
-      [...this.recipes].filter((recipe) => recipe.model.name !== recipeName)
-    );
-  }
-  sortRecipes() {
-    this.recipes = new Set(
-      [...this.recipes].sort((a, b) => {
-        return a.model.name.localeCompare(b.model.name);
-      })
-    );
-  }
-  render(container) {
+  render(container, className) {
     container.innerHTML = "";
-    for (const recipe of this.recipes) {
-      recipe.render();
+    for (const controller of this.activeRecipes) {
+      controller.render(container, className);
     }
   }
 }

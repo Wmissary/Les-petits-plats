@@ -1,34 +1,30 @@
-export class FiltersManager {
+export default class FiltersManager {
   constructor() {
-    this.filters = new Set([]);
+    this.filters = [];
   }
-  addFilter(filter) {
+  add(filter) {
     if (
-      ![...this.filters].some(
-        (f) =>
-          f.model.name === filter.model.name ||
-          f.model.name === filter.model.name.slice(0, -1)
+      !this.filters.find(
+        (i) =>
+          i.model.name === filter.model.name ||
+          i.model.name === filter.model.name.slice(0, -1)
       )
     ) {
-      this.filters.add(filter);
+      this.filters.push(filter);
     }
   }
-  removeFilter(filterName) {
-    this.filters = new Set(
-      [...this.filters].filter((filter) => filter.model.name !== filterName)
-    );
+  remove(name) {
+    this.filters = this.filters.filter((i) => i.model.name !== name);
   }
-  sortFilters() {
-    this.filters = new Set(
-      [...this.filters].sort((a, b) => {
-        return a.model.name.localeCompare(b.model.name);
-      })
-    );
+  sort() {
+    this.filters = this.filters.sort((a, b) => {
+      return a.model.name.localeCompare(b.model.name);
+    });
   }
-  render(container) {
+  render(container, className) {
     container.innerHTML = "";
     for (const filter of this.filters) {
-      filter.render();
+      filter.render(container, className);
     }
   }
 }

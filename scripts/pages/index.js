@@ -1,91 +1,81 @@
 import { fetchData } from "../utils/fetchData.js";
 
-import { FiltersManager } from "../managers/FiltersManager.js";
-import { TagsManager } from "../managers/TagsManager.js";
-import { RecipesManager } from "../managers/RecipesManager.js";
+import RecipeController from "../controllers/RecipeController.js";
+import RecipesManager from "../managers/RecipesManager.js";
 
-import {
-  createRecipeController,
-  createFilterController,
-} from "../utils/createController.js";
+import FilterController from "../controllers/FilterController.js";
 
-import { addTagEvent, addFilterEvent } from "../events/event.js";
+import TagController from "../controllers/TagController.js";
 
-async function init() {
-  const data = await fetchData();
+import { recipesConfig, filtersConfig, tagsConfig } from "../utils/config.js";
 
-  const recipesContainer = document.querySelector(".recipes");
-  const ingredientsContainer = document.querySelector(".ingredients");
-  const appliancesContainer = document.querySelector(".appliances");
-  const ustensilsContainer = document.querySelector(".utensils");
-  const activeFiltersContainer = document.querySelector(".active-filters");
+async function init({ recipesConfig, filtersConfig, tagsConfig }) {
+  const data = await fetchData(recipesConfig.url);
+  const recipesControllers = [];
 
-  const recipesManager = new RecipesManager();
-  const ingredientsManager = new FiltersManager();
-  const appliancesManager = new FiltersManager();
-  const ustensilsManager = new FiltersManager();
-  const tagsManager = new TagsManager();
+  for (const recipe of data) {
+    const recipeController = new RecipeController(recipe);
+    recipesControllers.push(recipeController);
 
-  for (const item of data) {
-    const recipeController = createRecipeController(
-      item,
-      recipesContainer,
-      "recipe"
-    );
-    recipesManager.addRecipe(recipeController);
-
-    for (const ingredient of item.ingredients) {
-      const filterController = createFilterController(
-        {
-          name: ingredient.ingredient,
-          type: "ingredient",
-        },
-        ingredientsContainer,
-        "filter"
-      );
-      ingredientsManager.addFilter(filterController);
+    for (const ingredient of recipe.ingredients) {
+      const filterController = new FilterController({
+        name: ingredient.ingredient,
+        type: filtersConfig.ingredients.type,
+      });
+      filtersConfig.ingredients.manager.add(filterController);
     }
-    const filterController = createFilterController(
-      {
-        name: item.appliance,
-        type: "appliance",
-      },
-      appliancesContainer,
-      "filter"
-    );
-    appliancesManager.addFilter(filterController);
 
-    for (const utensil of item.ustensils) {
-      const filterController = createFilterController(
-        {
-          name: utensil,
-          type: "utensil",
-        },
-        ustensilsContainer,
-        "filter"
-      );
-      ustensilsManager.addFilter(filterController);
+    const filterController = new FilterController({
+      name: recipe.appliance,
+      type: filtersConfig.appliances.type,
+    });
+    filtersConfig.appliances.manager.add(filterController);
+
+    for (const utensil of recipe.ustensils) {
+      const filterController = new FilterController({
+        name: utensil,
+        type: filtersConfig.utensils.type,
+      });
+      filtersConfig.utensils.manager.add(filterController);
     }
   }
-  recipesManager.sortRecipes();
-  recipesManager.render(recipesContainer);
 
-  ingredientsManager.sortFilters();
-  ingredientsManager.render(ingredientsContainer);
+  const recipesManager = new RecipesManager(recipesControllers);
+  recipesManager.sort();
+  recipesManager.render(recipesConfig.container, recipesConfig.className);
 
-  appliancesManager.sortFilters();
-  appliancesManager.render(appliancesContainer);
+  for (const filter of Object.values(filtersConfig)) {
+    filter.manager.sort();
+    filter.manager.render(filter.container, filter.className);
+  }
+  document.addEventListener("addTag", (e) => {
+    const tagController = new TagController(e.detail);
+    tagsConfig.manager.add(tagController);
+    tagsConfig.manager.sort();
+    tagsConfig.manager.render(tagsConfig.container, tagsConfig.className);
+    for (const filter of Object.values(filtersConfig)) {
+      if (filter.type === e.detail.type) {
+        filter.manager.remove(e.detail.name);
+        filter.manager.render(filter.container, filter.className);
+      }
+    }
+  });
 
-  ustensilsManager.sortFilters();
-  ustensilsManager.render(ustensilsContainer);
-
-  addTagEvent(tagsManager, ingredientsManager, activeFiltersContainer);
-  addTagEvent(tagsManager, appliancesManager, activeFiltersContainer);
-  addTagEvent(tagsManager, ustensilsManager, activeFiltersContainer);
-
-  addFilterEvent(tagsManager, ingredientsManager, ingredientsContainer);
-  addFilterEvent(tagsManager, appliancesManager, appliancesContainer);
-  addFilterEvent(tagsManager, ustensilsManager, ustensilsContainer);
+  document.addEventListener("addFilter", (e) => {
+    const filterController = new FilterController(e.detail);
+    for (const filter of Object.values(filtersConfig)) {
+      if (filter.type === e.detail.type) {
+        filter.manager.add(filterController);
+        filter.manager.sort();
+        filter.manager.render(filter.container, filter.className);
+      }
+    }
+    tagsConfig.manager.remove(e.detail.name);
+  });
 }
 
-init();
+init({
+  recipesConfig,
+  filtersConfig,
+  tagsConfig,
+});

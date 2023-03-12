@@ -1,48 +1,46 @@
-export class RecipeView {
-  constructor({ model, className, container }) {
+export default class RecipeView {
+  constructor(model) {
     this.model = model;
-    this.className = className;
-    this.container = container;
   }
-  create() {
+  create(className) {
     const card = document.createElement("section");
-    card.classList.add(this.className);
+    card.classList.add(className);
 
     const cardHeader = document.createElement("header");
-    cardHeader.classList.add(`${this.className}__header`);
+    cardHeader.classList.add(`${className}__header`);
 
     const cardImage = document.createElement("img");
-    cardImage.classList.add(`${this.className}__image`);
+    cardImage.classList.add(`${className}__image`);
 
     const cardBody = document.createElement("div");
-    cardBody.classList.add(`${this.className}__body`);
+    cardBody.classList.add(`${className}__body`);
 
     const cardTitle = document.createElement("h2");
-    cardTitle.classList.add(`${this.className}__title`);
+    cardTitle.classList.add(`${className}__title`);
     cardTitle.textContent = this.model.name;
 
     const cardTimer = document.createElement("div");
-    cardTimer.classList.add(`${this.className}__timer`);
+    cardTimer.classList.add(`${className}__timer`);
 
     const cardTimerIcon = document.createElement("i");
     cardTimerIcon.classList.add("far", "fa-clock");
 
     const cardTimerText = document.createElement("p");
-    cardTimerText.classList.add(`${this.className}__timer-text`);
+    cardTimerText.classList.add(`${className}__timer-text`);
     cardTimerText.textContent = `${this.model.time} min`;
 
     const cardIngredients = document.createElement("ul");
-    cardIngredients.classList.add(`${this.className}__ingredients`);
+    cardIngredients.classList.add(`${className}__ingredients`);
 
     for (const ingredient of this.model.ingredients) {
       const cardIngredient = document.createElement("li");
-      cardIngredient.classList.add(`${this.className}__ingredient`);
-      cardIngredient.textContent = `${ingredient.ingredient}: ${ingredient.quantity} ${ingredient.unit}`;
+      cardIngredient.classList.add(`${className}__ingredient`);
+      cardIngredient.textContent = `${ingredient.name} ${ingredient.quantity} ${ingredient.unit}`;
       cardIngredients.appendChild(cardIngredient);
     }
 
     const cardDescription = document.createElement("p");
-    cardDescription.classList.add(`${this.className}__description`);
+    cardDescription.classList.add(`${className}__description`);
     cardDescription.textContent = this.model.description;
 
     card.appendChild(cardHeader);
@@ -57,8 +55,8 @@ export class RecipeView {
 
     return card;
   }
-  render() {
-    const card = this.create();
-    this.container.appendChild(card);
+  render(container, className) {
+    const card = this.create(className);
+    container.appendChild(card);
   }
 }

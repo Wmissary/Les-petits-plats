@@ -1,6 +1,6 @@
-export class FilterModel {
-  constructor(data) {
-    this.name = data.name.toLowerCase();
-    this.type = data.type;
+export default class FilterModel {
+  constructor({ name, type }) {
+    this.name = name.toLowerCase();
+    this.type = type;
   }
 }

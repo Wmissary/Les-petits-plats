@@ -1,7 +1,7 @@
-export class IngredientModel {
-  constructor(data) {
-    this.ingredient = data.ingredient.toLowerCase();
-    this.quantity = parseInt(data.quantity);
-    this.unit = data.unit;
+export default class IngredientModel {
+  constructor({ ingredient, quantity = "", unit = "" } = {}) {
+    this.name = ingredient.toLowerCase();
+    this.quantity = quantity;
+    this.unit = unit;
   }
 }

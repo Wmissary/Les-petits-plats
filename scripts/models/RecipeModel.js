@@ -1,6 +1,6 @@
-import { IngredientModel } from "./IngredientModel.js";
+import IngredientModel from "./IngredientModel.js";
 
-export class RecipeModel {
+export default class RecipeModel {
   constructor(data) {
     this.id = data.id;
 

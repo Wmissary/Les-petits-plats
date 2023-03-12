@@ -1,28 +1,30 @@
-export class TagsManager {
+export default class TagsManager {
   constructor() {
-    this.tags = new Set([]);
+    this.tags = [];
   }
-  addTag(tag) {
-    if (![...this.tags].some((t) => t.model.name === tag.model.name)) {
-      this.tags.add(tag);
+  add(tag) {
+    if (
+      !this.tags.find(
+        (i) =>
+          i.model.name === tag.model.name ||
+          i.model.name === tag.model.name.slice(0, -1)
+      )
+    ) {
+      this.tags.push(tag);
     }
   }
-  removeTag(tagName) {
-    this.tags = new Set(
-      [...this.tags].filter((tag) => tag.model.name !== tagName)
-    );
+  remove(name) {
+    this.tags = this.tags.filter((i) => i.model.name !== name);
   }
-  sortTags() {
-    this.tags = new Set(
-      [...this.tags].sort((a, b) => {
-        return a.model.name.localeCompare(b.model.name);
-      })
-    );
+  sort() {
+    this.tags = this.tags.sort((a, b) => {
+      return a.model.name.localeCompare(b.model.name);
+    });
   }
-  render(container) {
+  render(container, className) {
     container.innerHTML = "";
-    for (const tag of this.tags) {
-      tag.render();
+    for (const filter of this.tags) {
+      filter.render(container, className);
     }
   }
 }

@@ -1,7 +1,5 @@
-const kPath = "data/recipes.json";
-
-export async function fetchData() {
-  const response = await fetch(kPath);
+export async function fetchData(path) {
+  const response = await fetch(path);
   const data = await response.json();
   return data;
 }

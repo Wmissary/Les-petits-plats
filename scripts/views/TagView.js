@@ -1,25 +1,23 @@
-export class TagView {
-  constructor(data) {
-    this.model = data.model;
-    this.className = data.className;
-    this.container = data.container;
+export default class TagView {
+  constructor(model) {
+    this.model = model;
   }
-  create() {
+  create(className) {
     const item = document.createElement("li");
-    item.classList.add(this.className);
-    item.classList.add(`${this.className}--${this.model.type}`);
+    item.classList.add(className);
+    item.classList.add(`${className}--${this.model.type}`);
 
     const name = document.createElement("p");
-    name.classList.add(`${this.className}__name`);
+    name.classList.add(`${className}__name`);
     name.textContent = this.model.name;
 
     const removeBtn = document.createElement("button");
-    removeBtn.classList.add(`${this.className}__button`);
+    removeBtn.classList.add(`${className}__button`);
 
     const removeIcon = document.createElement("i");
     removeIcon.classList.add("fas");
     removeIcon.classList.add("fa-times");
-    removeIcon.classList.add(`${this.className}__icon`);
+    removeIcon.classList.add(`${className}__icon`);
 
     removeBtn.appendChild(removeIcon);
 
@@ -38,8 +36,8 @@ export class TagView {
     });
     return item;
   }
-  render() {
-    const item = this.create();
-    this.container.appendChild(item);
+  render(container, className) {
+    const item = this.create(className);
+    container.appendChild(item);
   }
 }
