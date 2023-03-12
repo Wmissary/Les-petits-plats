@@ -64,7 +64,7 @@ async function init({ recipesConfig, filtersConfig, tagsConfig }) {
     const filterController = new FilterController(e.detail);
     for (const filter of Object.values(filtersConfig)) {
       if (filter.type === e.detail.type) {
-        filter.manager.add(filterController);
+        filter.manager.show(filterController.model.name);
         filter.manager.sort();
         filter.manager.render(filter.container, filter.className);
       }
@@ -74,7 +74,8 @@ async function init({ recipesConfig, filtersConfig, tagsConfig }) {
   document.addEventListener("removeFilter", (e) => {
     for (const filter of Object.values(filtersConfig)) {
       if (filter.type === e.detail.type) {
-        filter.manager.remove(e.detail.name);
+        filter.manager.hide(e.detail.name);
+        filter.manager.sort();
         filter.manager.render(filter.container, filter.className);
       }
     }

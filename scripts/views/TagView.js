@@ -25,7 +25,6 @@ export default class TagView {
     item.appendChild(removeBtn);
 
     removeBtn.addEventListener("click", () => {
-      console.log(this.model);
       const addFilterEvent = new CustomEvent("addFilter", {
         detail: {
           name: this.model.name,

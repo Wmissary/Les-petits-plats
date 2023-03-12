@@ -1,5 +1,5 @@
 export default class RecipesManager {
-  constructor(recipes, filtersManagers) {
+  constructor(recipes) {
     this.recipes = recipes;
     this.activeRecipes = this.recipes;
   }
