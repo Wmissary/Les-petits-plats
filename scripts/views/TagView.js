@@ -25,14 +25,22 @@ export default class TagView {
     item.appendChild(removeBtn);
 
     removeBtn.addEventListener("click", () => {
+      console.log(this.model);
       const addFilterEvent = new CustomEvent("addFilter", {
         detail: {
           name: this.model.name,
           type: this.model.type,
         },
       });
+
+      const removeTagEvent = new CustomEvent("removeTag", {
+        detail: {
+          name: this.model.name,
+          type: this.model.type,
+        },
+      });
       document.dispatchEvent(addFilterEvent);
-      item.remove();
+      document.dispatchEvent(removeTagEvent);
     });
     return item;
   }

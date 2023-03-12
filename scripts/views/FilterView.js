@@ -19,8 +19,16 @@ export default class FilterView {
           type: this.model.type,
         },
       });
+
+      const removeFilterEvent = new CustomEvent("removeFilter", {
+        detail: {
+          name: this.model.name,
+          type: this.model.type,
+        },
+      });
+
       document.dispatchEvent(addTagEvent);
-      item.remove();
+      document.dispatchEvent(removeFilterEvent);
     });
     return item;
   }

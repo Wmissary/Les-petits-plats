@@ -53,12 +53,11 @@ async function init({ recipesConfig, filtersConfig, tagsConfig }) {
     tagsConfig.manager.add(tagController);
     tagsConfig.manager.sort();
     tagsConfig.manager.render(tagsConfig.container, tagsConfig.className);
-    for (const filter of Object.values(filtersConfig)) {
-      if (filter.type === e.detail.type) {
-        filter.manager.remove(e.detail.name);
-        filter.manager.render(filter.container, filter.className);
-      }
-    }
+  });
+
+  document.addEventListener("removeTag", (e) => {
+    tagsConfig.manager.remove(e.detail.name);
+    tagsConfig.manager.render(tagsConfig.container, tagsConfig.className);
   });
 
   document.addEventListener("addFilter", (e) => {
@@ -70,7 +69,15 @@ async function init({ recipesConfig, filtersConfig, tagsConfig }) {
         filter.manager.render(filter.container, filter.className);
       }
     }
-    tagsConfig.manager.remove(e.detail.name);
+  });
+
+  document.addEventListener("removeFilter", (e) => {
+    for (const filter of Object.values(filtersConfig)) {
+      if (filter.type === e.detail.type) {
+        filter.manager.remove(e.detail.name);
+        filter.manager.render(filter.container, filter.className);
+      }
+    }
   });
 }
 
