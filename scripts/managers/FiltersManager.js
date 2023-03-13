@@ -39,4 +39,13 @@ export default class FiltersManager {
       filter.render(container, className);
     }
   }
+
+  search(string) {
+    this.showedFilters = this.filters.filter((i) =>
+      i.model.name.toLowerCase().includes(string.toLowerCase())
+    );
+  }
+  reset() {
+    this.showedFilters = this.filters;
+  }
 }
