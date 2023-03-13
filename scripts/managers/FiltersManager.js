@@ -15,10 +15,6 @@ export default class FiltersManager {
       this.showedFilters.push(filter);
     }
   }
-  remove(name) {
-    this.filters = this.filters.filter((i) => i.model.name !== name);
-  }
-
   show(name) {
     const filter = this.filters.find((i) => i.model.name === name);
     this.showedFilters.push(filter);
@@ -38,6 +34,7 @@ export default class FiltersManager {
 
   render(container, className) {
     container.innerHTML = "";
+    this.sort();
     for (const filter of this.showedFilters) {
       filter.render(container, className);
     }

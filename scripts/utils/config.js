@@ -1,37 +1,30 @@
-import FilterManager from "../managers/FiltersManager.js";
-import TagsManager from "../managers/TagsManager.js";
-
-const recipesConfig = {
+const recipeConfig = {
   url: "data/recipes.json",
   container: document.querySelector(".recipes"),
   className: "recipe",
 };
 
 const filtersConfig = {
-  ingredients: {
+  ingredient: {
     container: document.querySelector(".ingredients"),
     className: "filter",
     type: "ingredient",
-    manager: new FilterManager(),
   },
-  appliances: {
+  appliance: {
     container: document.querySelector(".appliances"),
     className: "filter",
     type: "appliance",
-    manager: new FilterManager(),
   },
-  utensils: {
+  utensil: {
     container: document.querySelector(".utensils"),
     className: "filter",
     type: "utensil",
-    manager: new FilterManager(),
   },
 };
 
-const tagsConfig = {
+const tagConfig = {
   container: document.querySelector(".active-filters"),
   className: "tag",
-  manager: new TagsManager(),
 };
 
-export { recipesConfig, filtersConfig, tagsConfig };
+export { recipeConfig, filtersConfig, tagConfig };

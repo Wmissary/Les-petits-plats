@@ -23,6 +23,7 @@ export default class TagsManager {
   }
   render(container, className) {
     container.innerHTML = "";
+    this.sort();
     for (const filter of this.tags) {
       filter.render(container, className);
     }
