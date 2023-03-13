@@ -87,11 +87,12 @@ async function init({ recipeConfig, filtersConfig, tagConfig }) {
   const utensilsContainer = document.querySelector(".utensils");
 
   searchIngredientInput.addEventListener("click", (e) => {
-    ingredientsContainer.style.display = "grid";
-    appliancesContainer.style.display = "none";
-    utensilsContainer.style.display = "none";
-
-    searchIngredientFilters.classList.add("filters__search--active");
+    if (ingredientsContainer.style.display === "grid") {
+      ingredientsContainer.style.display = "none";
+    } else {
+      ingredientsContainer.style.display = "grid";
+    }
+    searchIngredientFilters.classList.toggle("filters__search--active");
   });
   searchIngredientInput.addEventListener("keyup", (e) => {
     const ingredientsManager = managers.filters.ingredient;
@@ -103,11 +104,12 @@ async function init({ recipeConfig, filtersConfig, tagConfig }) {
   });
 
   searchApplianceInput.addEventListener("click", (e) => {
-    appliancesContainer.style.display = "grid";
-    ingredientsContainer.style.display = "none";
-    utensilsContainer.style.display = "none";
-
-    searchApplianceFilters.classList.add("filters__search--active");
+    if (appliancesContainer.style.display === "grid") {
+      appliancesContainer.style.display = "none";
+    } else {
+      appliancesContainer.style.display = "grid";
+    }
+    searchApplianceFilters.classList.toggle("filters__search--active");
   });
 
   searchApplianceInput.addEventListener("keyup", (e) => {
@@ -120,11 +122,12 @@ async function init({ recipeConfig, filtersConfig, tagConfig }) {
   });
 
   searchUstensilInput.addEventListener("click", (e) => {
-    utensilsContainer.style.display = "grid";
-    ingredientsContainer.style.display = "none";
-    appliancesContainer.style.display = "none";
-
-    searchUstensilFilters.classList.add("filters__search--active");
+    if (utensilsContainer.style.display === "grid") {
+      utensilsContainer.style.display = "none";
+    } else {
+      utensilsContainer.style.display = "grid";
+    }
+    searchUstensilFilters.classList.toggle("filters__search--active");
   });
 
   searchUstensilInput.addEventListener("keyup", (e) => {
@@ -136,36 +139,6 @@ async function init({ recipeConfig, filtersConfig, tagConfig }) {
     );
   });
 
-  const searchFiltersLabel = document.querySelectorAll(".filters__label");
-
-  searchFiltersLabel.forEach((label) => {
-    label.addEventListener("click", (e) => {
-      if (e.currentTarget.htmlFor === "ingredient") {
-        if (ingredientsContainer.style.display === "grid") {
-          ingredientsContainer.style.display = "none";
-        } else {
-          ingredientsContainer.style.display = "grid";
-        }
-        searchIngredientFilters.classList.toggle("filters__search--active");
-      }
-      if (e.currentTarget.htmlFor === "appliance") {
-        if (appliancesContainer.style.display === "grid") {
-          appliancesContainer.style.display = "none";
-        } else {
-          appliancesContainer.style.display = "grid";
-        }
-        searchApplianceFilters.classList.toggle("filters__search--active");
-      }
-      if (e.currentTarget.htmlFor === "utensil") {
-        if (utensilsContainer.style.display === "grid") {
-          utensilsContainer.style.display = "none";
-        } else {
-          utensilsContainer.style.display = "grid";
-        }
-        searchUstensilFilters.classList.toggle("filters__search--active");
-      }
-    });
-  });
   document.addEventListener("click", (e) => {
     if (searchIngredientFilters.classList.contains("filters__search--active")) {
       if (!e.target.closest(".filters__search--ingredient")) {
