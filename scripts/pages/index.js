@@ -5,6 +5,7 @@ import {
   removeTagEvent,
   addFilterEvent,
   removeFilterEvent,
+  searchRecipeEvent,
 } from "../utils/events.js";
 
 import RecipeController from "../controllers/RecipeController.js";
@@ -164,6 +165,8 @@ async function init({ recipeConfig, filtersConfig, tagConfig }) {
     }
   });
 }
+
+searchRecipeEvent(managers, recipeConfig, filtersConfig);
 
 init({
   recipeConfig,

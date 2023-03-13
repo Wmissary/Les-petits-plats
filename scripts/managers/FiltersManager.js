@@ -45,6 +45,7 @@ export default class FiltersManager {
       i.model.name.toLowerCase().includes(string.toLowerCase())
     );
   }
+
   reset() {
     this.showedFilters = this.filters;
   }

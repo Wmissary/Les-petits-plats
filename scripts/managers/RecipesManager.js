@@ -33,4 +33,20 @@ export default class RecipesManager {
       controller.render(container, className);
     }
   }
+
+  search(string) {
+    this.activeRecipes = this.recipes.filter((recipe) => {
+      return (
+        recipe.model.name.toLowerCase().includes(string.toLowerCase()) ||
+        recipe.model.ingredients.some((ingredient) =>
+          ingredient.name.toLowerCase().includes(string.toLowerCase())
+        ) ||
+        recipe.model.description.toLowerCase().includes(string.toLowerCase())
+      );
+    });
+  }
+
+  reset() {
+    this.activeRecipes = this.recipes;
+  }
 }
