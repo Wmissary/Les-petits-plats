@@ -1,10 +1,22 @@
 import TagController from "../controllers/TagController.js";
 
-function addTagEvent(tagManager, tagConfig) {
+function addTagEvent(managers, configs) {
   document.addEventListener("addTag", (e) => {
+    const { tags, filters, recipes } = managers;
+    const { recipeConfig, filtersConfig, tagConfig } = configs;
     const tagController = new TagController(e.detail);
-    tagManager.add(tagController);
-    tagManager.render(tagConfig.container, tagConfig.className);
+
+    managers.tags.add(tagController);
+    managers.tags.render(tagConfig.container, tagConfig.className);
+
+    if (e.detail.type === "ingredient") {
+      managers.recipes.searchByIngredient(e.detail.name);
+    } else if (e.detail.type === "appliance") {
+      managers.recipes.searchByAppliance(e.detail.name);
+    } else if (e.detail.type === "utensil") {
+      managers.recipes.searchByUtensil(e.detail.name);
+    }
+    managers.recipes.render(recipeConfig.container, recipeConfig.className);
   });
 }
 

@@ -62,7 +62,11 @@ async function init({ recipeConfig, filtersConfig, tagConfig }) {
     value.render(filtersConfig[key].container, filtersConfig[key].className);
   });
 
-  addTagEvent(managers.tags, tagConfig);
+  addTagEvent(managers, {
+    recipeConfig,
+    filtersConfig,
+    tagConfig,
+  });
   removeTagEvent(managers.tags, tagConfig);
 
   addFilterEvent(managers.filters, filtersConfig);
